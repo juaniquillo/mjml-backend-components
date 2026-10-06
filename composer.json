@@ -1,0 +1,91 @@
+{
+    "name": "juaniquillo/mjml-backend-components",
+    "description": "Backend components for MJML",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Juaniquillo",
+            "role": "Developer",
+            "email": "juaniquillo@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^12.0|^13.0",
+        "juaniquillo/laravel-backend-component": "^0.9.1",
+        "symfony/process": "^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0",
+        "rector/rector": "^2.0",
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "suggest": {
+        "ext-v8js": "Allows hyper-fast, in-memory MJML rendering directly inside the PHP process without spawning Node shell commands."
+    },
+    "autoload": {
+        "psr-4": {
+            "Juaniquillo\\MjmlBackendComponents\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Juaniquillo\\MjmlBackendComponents\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Juaniquillo\\MjmlBackendComponents\\MjmlBackendComponentsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint:check": [
+            "vendor/bin/pint --parallel --test"
+        ],
+        "analyse": [
+            "vendor/bin/phpstan analyse --memory-limit=1G"
+        ],
+        "rector": [
+            "vendor/bin/rector process"
+        ],
+        "rector:check": [
+            "vendor/bin/rector process --dry-run"
+        ],
+        "test:unit": [
+            "vendor/bin/pest"
+        ],
+        "qa": [
+            "@analyse",
+            "@rector:check",
+            "@lint:check",
+            "@test:unit"
+        ]
+    }
+}
