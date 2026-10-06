@@ -81,11 +81,20 @@
         "test:unit": [
             "vendor/bin/pest"
         ],
+        "test:ci": [
+            "vendor/bin/pest --ci"
+        ],
         "qa": [
             "@analyse",
             "@rector:check",
             "@lint:check",
             "@test:unit"
+        ],
+        "qa:ci": [
+            "@analyse",
+            "@rector:check",
+            "@lint:check",
+            "@test:ci"
         ]
     }
 }
