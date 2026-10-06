@@ -21,3 +21,4 @@ Build responsive HTML emails from PHP: compose MJML trees via `MjmlComponentBuil
 - Enum cases without a builder shorthand are built via `MjmlComponentBuilder::make()`.
 - `ext-v8js` is `suggest`-only: guard with `extension_loaded('v8js')` / `class_exists('V8Js')`, never add it to `require` or `require-dev`.
 - Consumer AI resources live in `resources/boost/` (guideline + skill); keep their code snippets accurate.
+- Never commit, tag, or push — the user handles all version control; leave changes uncommitted in the working tree.
