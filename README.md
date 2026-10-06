@@ -23,6 +23,13 @@ Publish the configuration file using:
 php artisan vendor:publish --tag=mjml-backend-component-config
 ```
 
+> [!TIP]
+> #### Laravel Boost Skill
+> If you use [Laravel Boost](https://github.com/laravel/boost), install the AI skill:
+> ```bash
+> php artisan boost:add-skill https://github.com/juaniquillo/mjml-backend-components
+> ```
+
 ## Usage
 
 Assemble components with the fluent builder, inspect the intermediate MJML with `toHtml()`, and compile to responsive HTML with `renderHtml()`:
