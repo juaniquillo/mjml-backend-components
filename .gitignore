@@ -6,6 +6,8 @@
 composer.lock
 .phpunit.cache
 .phpunit.result.cache
+/.pest.xml
+.pest.xml
 .DS_Store
 .idea
 .vscode
