@@ -36,6 +36,7 @@ return [
             'class' => NodeProcessCompiler::class,
             'binary' => env('MJML_NODE_BINARY', 'npx'),
             'arguments' => ['mjml', '-s'],
+            'timeout' => (float) env('MJML_TIMEOUT', 60),
         ],
 
         'v8js' => [

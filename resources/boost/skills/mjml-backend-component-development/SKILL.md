@@ -12,7 +12,7 @@ Use this skill when the user needs to:
 - Compose an MJML email layout in PHP (document, sections, text, images, buttons)
 - Inspect a component tree as raw MJML or compile it to production HTML
 - Add a compiler driver (custom `CompilesMjml` implementation) or switch between `node` and `v8js`
-- Configure or publish the `mjml-backend-component` config
+- Configure or publish the `mjml-backend-components` config
 - Test MJML components with Pest
 
 ## Creating Components
@@ -72,14 +72,14 @@ $html = $email->renderHtml();
 
 ## Compiler Drivers
 
-`config/mjml-backend-component.php` selects the driver via the `default` key (`MJML_COMPILER` env, defaults to `node`):
+`config/mjml-backend-components.php` selects the driver via the `default` key (`MJML_COMPILER` env, defaults to `node`):
 
 | Driver | Class | Environment |
 |---|---|---|
 | `node` | `NodeProcessCompiler` | `MJML_NODE_BINARY` (default `npx`), runs `mjml -s` as an isolated process |
 | `v8js` | `V8JsCompiler` | `MJML_JS_PATH` (bundled `mjml.js`), in-memory via `ext-v8js` |
 
-Publish with `php artisan vendor:publish --tag=mjml-backend-component-config`. Custom drivers implement `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml::compile(string $mjmlMarkup): string` and are registered as another key under `drivers`.
+Publish with `php artisan vendor:publish --tag=mjml-backend-components-config`. Custom drivers implement `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml::compile(string $mjmlMarkup): string` and are registered as another key under `drivers`.
 
 `ext-v8js` is `suggest`-only and must stay that way: guard usage with `extension_loaded('v8js')` / `class_exists('V8Js')`, and never add it to `require` or `require-dev`.
 
