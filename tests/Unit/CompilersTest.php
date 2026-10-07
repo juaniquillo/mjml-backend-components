@@ -24,6 +24,17 @@ it('throws when the node process fails', function () {
         ->toThrow(RuntimeException::class, 'MJML compilation failed: boom');
 });
 
+it('times out slow compilations', function () {
+    $compiler = new NodeProcessCompiler([
+        'binary' => PHP_BINARY,
+        'arguments' => ['-r', 'sleep(5);'],
+        'timeout' => 1,
+    ]);
+
+    expect(fn () => $compiler->compile('<mjml></mjml>'))
+        ->toThrow(RuntimeException::class, 'MJML compilation timed out after 1 seconds');
+});
+
 it('requires the v8js extension', function () {
     if (extension_loaded('v8js')) {
         $this->markTestSkipped('v8js extension is installed.');

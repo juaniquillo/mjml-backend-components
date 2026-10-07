@@ -6,15 +6,18 @@ use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;
 use Juaniquillo\MjmlBackendComponents\Compilers\NodeProcessCompiler;
 use Juaniquillo\MjmlBackendComponents\Compilers\V8JsCompiler;
 use Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml;
+use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 
 it('binds the node compiler by default', function () {
-    expect(config('mjml-backend-component.default'))->toBe('node')
-        ->and(config('mjml-backend-component.drivers.node.class'))->toBe(NodeProcessCompiler::class)
+    expect(config('mjml-backend-components.default'))->toBe('node')
+        ->and(config('mjml-backend-components.drivers.node.class'))->toBe(NodeProcessCompiler::class)
+        ->and(config('mjml-backend-components.drivers.node.timeout'))->toBe(60.0)
+        ->and(config('mjml-backend-components.drivers.v8js.class'))->toBe(V8JsCompiler::class)
         ->and(app(CompilesMjml::class))->toBeInstanceOf(NodeProcessCompiler::class);
 });
 
 it('binds the configured driver', function () {
-    config()->set('mjml-backend-component.default', 'v8js');
+    config()->set('mjml-backend-components.default', 'v8js');
 
     app()->forgetInstance(CompilesMjml::class);
 
@@ -22,7 +25,7 @@ it('binds the configured driver', function () {
 });
 
 it('rejects unknown drivers', function () {
-    config()->set('mjml-backend-component.default', 'missing');
+    config()->set('mjml-backend-components.default', 'missing');
 
     app()->forgetInstance(CompilesMjml::class);
 
@@ -30,12 +33,23 @@ it('rejects unknown drivers', function () {
 });
 
 it('renders html through the bound compiler', function () {
-    config()->set('mjml-backend-component.drivers.node.binary', PHP_BINARY);
-    config()->set('mjml-backend-component.drivers.node.arguments', ['-r', 'echo stream_get_contents(STDIN);']);
+    config()->set('mjml-backend-components.drivers.node.binary', PHP_BINARY);
+    config()->set('mjml-backend-components.drivers.node.arguments', ['-r', 'echo stream_get_contents(STDIN);']);
 
     app()->forgetInstance(CompilesMjml::class);
 
-    $html = MjmlComponentBuilder::text('Hi')->renderHtml();
+    $html = MjmlComponentBuilder::document([
+        MjmlComponentBuilder::text('Hi'),
+    ])->renderHtml();
 
-    expect($html)->toBe('<mj-text>Hi</mj-text>');
+    expect($html)->toBe('<mjml><mj-text>Hi</mj-text></mjml>');
 });
+
+it('rejects renderHtml on nested components', function (MjmlComponentEnum $component) {
+    expect(fn () => MjmlComponentBuilder::make($component)->setContent('Hi')->renderHtml())
+        ->toThrow(RuntimeException::class, 'must be called on the root MJML document');
+})->with([
+    MjmlComponentEnum::TEXT,
+    MjmlComponentEnum::SECTION,
+    MjmlComponentEnum::HEAD,
+]);

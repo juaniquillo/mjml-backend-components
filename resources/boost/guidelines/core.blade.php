@@ -1,5 +1,5 @@
 @php
-    // Laravel Boost AI Guidelines for juaniquillo/mjml-backend-components
+    // Laravel Boost AI Guidelines for juaniquillo/mjml-backend-componentss
     // Auto-loaded when the user runs `php artisan boost:install`
 @endphp
 ## MJML Backend Components
@@ -34,10 +34,10 @@ Content and attributes use `setContent()` / `setContents()` and `setAttribute()`
 
 ### Compiler drivers
 
-`config/mjml-backend-component.php` selects the driver via `MJML_COMPILER` (default `node`):
+`config/mjml-backend-components.php` selects the driver via `MJML_COMPILER` (default `node`):
 
 - `node` — isolated `npx mjml -s` process (`MJML_NODE_BINARY`).
 - `v8js` — in-memory compilation via `ext-v8js` (`MJML_JS_PATH`); the extension is optional and never required.
 - custom — point any driver key's `class` at your own `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml` implementation.
 
-Publish the config with `php artisan vendor:publish --tag=mjml-backend-component-config`.
+Publish the config with `php artisan vendor:publish --tag=mjml-backend-components-config`.
