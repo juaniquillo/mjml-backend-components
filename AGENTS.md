@@ -12,7 +12,7 @@ Build responsive HTML emails from PHP: compose MJML trees via `MjmlComponentBuil
 - `composer analyse` — PHPStan level 7 (`src`, `config`)
 - `composer lint:check` — Pint check mode (`src`, `config`, `tests`); run `vendor/bin/pint` to fix
 - `composer rector:check` — Rector dry run
-- `composer qa` — all of the above, in order
+- `composer qa` — all of the above, in order (`qa:ci` is the CI variant running `pest --ci`)
 
 ## Gotchas
 
