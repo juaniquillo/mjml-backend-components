@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use Juaniquillo\MjmlBackendComponents\Compilers\NodeProcessCompiler;
 use Juaniquillo\MjmlBackendComponents\Compilers\V8JsCompiler;
-use Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml;
-use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder as Mjml;
 
 it('pipes markup through the node process compiler', function () {
     $compiler = new NodeProcessCompiler([
@@ -57,25 +55,4 @@ it('requires the mjml js bundle', function () {
 
     expect(fn () => $compiler->compile('<mjml></mjml>'))
         ->toThrow(RuntimeException::class, 'Compiled MJML JavaScript bundle not found');
-});
-
-test('it compiles valid intermediate mjml structure', function () {
-    // 1. Swap out the compiler with a fast inline mock wrapper
-    app()->instance(CompilesMjml::class, new class implements CompilesMjml {
-        public function compile(string $mjmlMarkup): string {
-            // Simply echo the raw markup back so we can assert its tag generation
-            return $mjmlMarkup;
-        }
-    });
-
-    // 2. Build your component layout using your fluent builder
-    $email = Mjml::document([
-        Mjml::text('Hello Lindsey!')
-    ]);
-
-    // 3. Render and assert against the structure
-    $output = $email->renderHtml();
-
-    expect($output)->toContain('<mjml>')
-        ->toContain('<mj-text>Hello Lindsey!</mj-text>');
 });
