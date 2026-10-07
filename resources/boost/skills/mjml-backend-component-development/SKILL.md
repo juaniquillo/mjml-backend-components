@@ -92,7 +92,7 @@ composer test:unit     # Pest suite
 composer analyse       # PHPStan level 7
 composer lint:check    # Pint check mode
 composer rector:check  # Rector dry run
-composer qa            # all of the above
+composer qa            # all of the above (qa:ci is the CI variant running pest --ci)
 ```
 
 When testing compilation without the MJML CLI, override the `node` driver config to echo stdin through the PHP binary instead of asserting against real `npx` output.

@@ -1,5 +1,5 @@
 @php
-    // Laravel Boost AI Guidelines for juaniquillo/mjml-backend-componentss
+    // Laravel Boost AI Guidelines for juaniquillo/mjml-backend-components
     // Auto-loaded when the user runs `php artisan boost:install`
 @endphp
 ## MJML Backend Components

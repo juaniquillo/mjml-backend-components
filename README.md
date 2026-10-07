@@ -14,7 +14,7 @@ Build responsive HTML emails from PHP. Compose MJML layouts in backend code, com
 Install the package via Composer:
 
 ```bash
-composer require juaniquillo/mjml-backend-componentss
+composer require juaniquillo/mjml-backend-components
 ```
 
 Publish the configuration file using:
@@ -27,7 +27,7 @@ php artisan vendor:publish --tag=mjml-backend-components-config
 > #### Laravel Boost Skill
 > If you use [Laravel Boost](https://github.com/laravel/boost), install the AI skill:
 > ```bash
-> php artisan boost:add-skill https://github.com/juaniquillo/mjml-backend-componentss
+> php artisan boost:add-skill https://github.com/juaniquillo/mjml-backend-components
 > ```
 
 ## Usage
