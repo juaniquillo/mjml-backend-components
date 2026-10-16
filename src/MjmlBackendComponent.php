@@ -45,6 +45,7 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
             'contents' => $this->processContent()->toArray(),
         ];
     }
+
     /**
      * Render the component tree down to its intermediate string of raw MJML markup.
      * This fulfills Laravel's Htmlable contract.
