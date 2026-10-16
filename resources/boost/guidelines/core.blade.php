@@ -8,7 +8,7 @@ This package composes MJML email layouts in PHP and compiles them to responsive 
 
 ### Building emails
 
-Use `MjmlComponentBuilder` with a `MjmlComponentEnum`. Shorthands exist for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`); every other enum case goes through the generic `make()` path:
+Use `MjmlComponentBuilder` with a `MjmlComponentEnum`. Shorthands exist for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`, `all`); every other enum case goes through the generic `make()` path:
 
 ```php
 use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;

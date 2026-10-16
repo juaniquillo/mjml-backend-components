@@ -9,15 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `MjmlBackendComponent` for composing MJML trees in PHP with raw-markup (`toHtml`) and compiled-HTML (`renderHtml`) output.
-- `MjmlComponentEnum` covering document, body, and head elements.
-- `MjmlComponentBuilder` with fluent shorthands plus a generic `make()` path for every enum case.
-- Compiler drivers behind the `CompilesMjml` contract: `NodeProcessCompiler` (`npx mjml -s` by default) and `V8JsCompiler` (opt-in via `ext-v8js`).
-- Publishable `mjml-backend-components` config with per-driver settings.
-- Pest test suite covering rendering, builders, drivers, and the service provider.
-- Configurable process `timeout` for the `node` compiler driver (`MJML_TIMEOUT`, default 60 seconds) with a dedicated timeout exception.
+- `MjmlComponentEnum` is now a string-backed enum (values are the MJML tag suffix: `mjml`, `head`, `body`, `section`, `column`, `group`, `text`, `image`, `button`, `divider`, `spacer`, `hero`, `raw`, `attributes`, `all`, `selector`, `class`, `style`, `font`, `title`, `preview`).
+- `MjmlComponentEnum::MJML_CLASS` (= `'class'`) — renders `<mj-class>`.
+- `MjmlComponentBuilder::all()` shorthand — `MjmlComponentBuilder::all(['font-family' => 'Inter'])` → `<mj-all font-family="Inter">`.
+- Single-quote-preserving attribute escaping: `e()` uses `ENT_COMPAT` so `{{ asset('images/hero.jpg') }}` passes through literal without being escaped to `&#039;`.
+- `MjmlComponentEnum` cases now support `->value`, `->name`, `from()`, `tryFrom()`, and `json_encode()`.
 
 ### Changed
 
-- Renamed the config file, key, and publish tag to plural `mjml-backend-components` for consistency. If you already published the singular config file, re-publish with `php artisan vendor:publish --tag=mjml-backend-components-config` — the old file is no longer read.
-- `renderHtml()` now validates the rendered markup starts at the document root instead of inspecting component internals.
+- `MjmlBackendComponent::__construct()` now accepts only `MjmlComponentEnum` (no more string workaround). Uses `$component->value` for the element name.
+- Attribute escaping changed from `ENT_QUOTES` to `ENT_COMPAT` — single quotes (`'`) no longer become `&#039;`.
+- `renderAttributes()` interpolation bug fixed — `htmlspecialchars()` is now properly called via concatenation instead of inside `{$...}`.
+
+### Deprecated
+
+- Direct use of string component names in `new MjmlBackendComponent('...')` — use the enum cases instead.

@@ -43,7 +43,8 @@ $email = MjmlComponentBuilder::document([
 | **Document** | `MJML`, `HEAD`, `BODY` |
 | **Layout** | `SECTION`, `COLUMN`, `GROUP`, `HERO`, `SPACER` |
 | **Content** | `TEXT`, `IMAGE`, `BUTTON`, `DIVIDER`, `RAW` |
-| **Head config** | `ATTRIBUTES`, `STYLE`, `FONT`, `TITLE`, `PREVIEW` |
+| **Head config** | `ATTRIBUTES`, `ALL`, `SELECTOR`, `STYLE`, `FONT`, `TITLE`, `PREVIEW` |
+| **Special** | `MJML_CLASS` (= `class`) |
 
 Shorthands exist for `document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, and `text`. Every other case is built through the generic `MjmlComponentBuilder::make()` path — do not invent new shorthand names.
 
