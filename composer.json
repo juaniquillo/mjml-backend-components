@@ -66,6 +66,9 @@
             "@build",
             "@php vendor/bin/testbench serve --ansi"
         ],
+        "lint": [
+            "vendor/bin/pint --parallel"
+        ],
         "lint:check": [
             "vendor/bin/pint --parallel --test"
         ],
@@ -87,7 +90,7 @@
         "qa": [
             "@analyse",
             "@rector:check",
-            "@lint:check",
+            "@lint",
             "@test:unit"
         ],
         "qa:ci": [
