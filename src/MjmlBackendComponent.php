@@ -45,7 +45,6 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
             'contents' => $this->processContent()->toArray(),
         ];
     }
-
     /**
      * Render the component tree down to its intermediate string of raw MJML markup.
      * This fulfills Laravel's Htmlable contract.
@@ -65,6 +64,9 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
 
     /**
      * Format the array from getAttributes() into a standard XML attribute string.
+     *
+     * Uses ENT_COMPAT so single quotes (e.g. {{ asset('images/hero.jpg') }})
+     * pass through literal without being escaped to &#039;.
      */
     protected function renderAttributes(): string
     {
@@ -77,9 +79,7 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
 
         $rendered = [];
         foreach ($attributes as $name => $value) {
-            // Escape values safely for XML context
-            $escapedValue = e($value);
-            $rendered[] = "{$name}=\"{$escapedValue}\"";
+            $rendered[] = $name.'="'.htmlspecialchars((string) $value, ENT_COMPAT | ENT_SUBSTITUTE, 'UTF-8', true).'"';
         }
 
         // Return with a leading space for clean spacing inside the tag element
