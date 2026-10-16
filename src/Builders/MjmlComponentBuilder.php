@@ -46,6 +46,18 @@ class MjmlComponentBuilder
     }
 
     /**
+     * Shorthand to build a global all-element style block.
+     * Sets default font-family (or any attribute) on the mj-all component,
+     * applying those styles to all child components automatically.
+     *
+     * @param  array<string, mixed>  $attributes
+     */
+    public static function all(array $attributes = []): MjmlBackendComponent
+    {
+        return static::make(MjmlComponentEnum::ALL)->setAttributes($attributes);
+    }
+
+    /**
      * Shorthand to inject custom web fonts from Google Fonts or local assets.
      */
     public static function font(string $name, string $href): MjmlBackendComponent

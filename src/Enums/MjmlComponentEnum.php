@@ -4,29 +4,32 @@ declare(strict_types=1);
 
 namespace Juaniquillo\MjmlBackendComponents\Enums;
 
-enum MjmlComponentEnum
+enum MjmlComponentEnum: string
 {
     // Core Document Structural Elements
-    case MJML;
-    case HEAD;
-    case BODY;
-    case SECTION;
-    case COLUMN;
-    case GROUP;
+    case MJML = 'mjml';
+    case HEAD = 'head';
+    case BODY = 'body';
+    case SECTION = 'section';
+    case COLUMN = 'column';
+    case GROUP = 'group';
 
     // Body Content Elements
-    case TEXT;
-    case IMAGE;
-    case BUTTON;
-    case DIVIDER;
-    case SPACER;
-    case HERO;
-    case RAW;
+    case TEXT = 'text';
+    case IMAGE = 'image';
+    case BUTTON = 'button';
+    case DIVIDER = 'divider';
+    case SPACER = 'spacer';
+    case HERO = 'hero';
+    case RAW = 'raw';
 
     // Head Configuration Elements
-    case ATTRIBUTES;
-    case STYLE;
-    case FONT;
-    case TITLE;
-    case PREVIEW;
+    case ATTRIBUTES = 'attributes';
+    case ALL = 'all';
+    case SELECTOR = 'selector';
+    case MJML_CLASS = 'class';
+    case STYLE = 'style';
+    case FONT = 'font';
+    case TITLE = 'title';
+    case PREVIEW = 'preview';
 }

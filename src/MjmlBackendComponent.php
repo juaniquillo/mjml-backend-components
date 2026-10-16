@@ -24,8 +24,7 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
 
     public function __construct(MjmlComponentEnum $component)
     {
-        // Convert enum case (e.g. TEXT -> 'text', SECTION -> 'section')
-        $this->elementName = strtolower($component->name);
+        $this->elementName = $component->value;
     }
 
     public function getAttributeBag(): AttributeBag
