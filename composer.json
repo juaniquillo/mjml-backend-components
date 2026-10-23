@@ -13,7 +13,7 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^12.0|^13.0",
-        "juaniquillo/laravel-backend-component": "^0.9.1",
+        "juaniquillo/laravel-backend-component": "^0.9.1||^0.10.0",
         "symfony/process": "^7.0|^8.0"
     },
     "require-dev": {
