@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Juaniquillo\MjmlBackendComponents\Builders;
+namespace Juaniquillo\MjmlBackendComponents\Factories;
 
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 use Juaniquillo\MjmlBackendComponents\MjmlBackendComponent;
 
-class MjmlComponentBuilder
+class MjmlComponentFactory
 {
     /**
      * Create a new fluent instance of an MJML component.

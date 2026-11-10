@@ -3,43 +3,43 @@
 declare(strict_types=1);
 
 use Juaniquillo\BackendComponents\Components\DefaultAttributeBag;
-use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;
 use Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
+use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 use Juaniquillo\MjmlBackendComponents\MjmlBackendComponent;
 
 it('renders the root element as plain mjml', function () {
-    $html = MjmlComponentBuilder::document()->toHtml();
+    $html = MjmlComponentFactory::document()->toHtml();
 
     expect($html)->toBe('<mjml></mjml>');
 });
 
 it('renders body elements with the mj- prefix', function () {
-    $html = MjmlComponentBuilder::make(MjmlComponentEnum::SECTION)->toHtml();
+    $html = MjmlComponentFactory::make(MjmlComponentEnum::SECTION)->toHtml();
 
     expect($html)->toBe('<mj-section></mj-section>');
 });
 
 it('renders attributes into the tag', function () {
-    $html = MjmlComponentBuilder::text('Hi', ['color' => 'red'])->toHtml();
+    $html = MjmlComponentFactory::text('Hi', ['color' => 'red'])->toHtml();
 
     expect($html)->toBe('<mj-text color="red">Hi</mj-text>');
 });
 
 it('escapes attribute values for xml', function () {
-    $html = MjmlComponentBuilder::text('x', ['title' => 'say "hi" & <bye>'])->toHtml();
+    $html = MjmlComponentFactory::text('x', ['title' => 'say "hi" & <bye>'])->toHtml();
 
     expect($html)->toBe('<mj-text title="say &quot;hi&quot; &amp; &lt;bye&gt;">x</mj-text>');
 });
 
 it('renders nested components recursively', function () {
-    $html = MjmlComponentBuilder::document([
-        MjmlComponentBuilder::head([
-            MjmlComponentBuilder::preview('Hello'),
+    $html = MjmlComponentFactory::document([
+        MjmlComponentFactory::head([
+            MjmlComponentFactory::preview('Hello'),
         ]),
-        MjmlComponentBuilder::make(MjmlComponentEnum::BODY)->setContents([
-            MjmlComponentBuilder::section(
-                [MjmlComponentBuilder::text('Hi', ['color' => 'red'])],
+        MjmlComponentFactory::make(MjmlComponentEnum::BODY)->setContents([
+            MjmlComponentFactory::section(
+                [MjmlComponentFactory::text('Hi', ['color' => 'red'])],
                 ['background-color' => '#fff'],
             ),
         ]),
@@ -54,7 +54,7 @@ it('renders nested components recursively', function () {
 });
 
 it('serializes to an array', function () {
-    $array = MjmlComponentBuilder::text('Hi', ['color' => 'red'])->toArray();
+    $array = MjmlComponentFactory::text('Hi', ['color' => 'red'])->toArray();
 
     expect($array['name'])->toBe('text')
         ->and($array['component'])->toBe(MjmlBackendComponent::class)
@@ -63,14 +63,14 @@ it('serializes to an array', function () {
 });
 
 it('exposes an attribute bag', function () {
-    $bag = MjmlComponentBuilder::text('Hi', ['color' => 'red'])->getAttributeBag();
+    $bag = MjmlComponentFactory::text('Hi', ['color' => 'red'])->getAttributeBag();
 
     expect($bag)->toBeInstanceOf(DefaultAttributeBag::class)
         ->and($bag->getAttributes())->toBe(['color' => 'red']);
 });
 
 it('renders every enum case with its mjml tag', function (MjmlComponentEnum $component, string $expected) {
-    expect(MjmlComponentBuilder::make($component)->toHtml())->toBe($expected);
+    expect(MjmlComponentFactory::make($component)->toHtml())->toBe($expected);
 })->with([
     'document root' => [MjmlComponentEnum::MJML, '<mjml></mjml>'],
     'head' => [MjmlComponentEnum::HEAD, '<mj-head></mj-head>'],
@@ -93,14 +93,14 @@ it('renders every enum case with its mjml tag', function (MjmlComponentEnum $com
 ]);
 
 it('renders non-string attribute values', function () {
-    $html = MjmlComponentBuilder::text('Hi', ['font-size' => 14, 'align' => 'center'])->toHtml();
+    $html = MjmlComponentFactory::text('Hi', ['font-size' => 14, 'align' => 'center'])->toHtml();
 
     expect($html)->toBe('<mj-text font-size="14" align="center">Hi</mj-text>');
 });
 
 it('serializes nested trees to arrays', function () {
-    $array = MjmlComponentBuilder::document([
-        MjmlComponentBuilder::text('Hi'),
+    $array = MjmlComponentFactory::document([
+        MjmlComponentFactory::text('Hi'),
     ])->toArray();
 
     expect($array['name'])->toBe('mjml')
@@ -119,8 +119,8 @@ it('delegates rendering to the bound compiler', function () {
         }
     });
 
-    $output = MjmlComponentBuilder::document([
-        MjmlComponentBuilder::text('Hello Lindsey!'),
+    $output = MjmlComponentFactory::document([
+        MjmlComponentFactory::text('Hello Lindsey!'),
     ])->renderHtml();
 
     expect($output)->toContain('<mjml>')

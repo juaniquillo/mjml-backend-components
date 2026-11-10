@@ -32,19 +32,19 @@ php artisan vendor:publish --tag=mjml-backend-components-config
 
 ## Usage
 
-Assemble components with the fluent builder, inspect the intermediate MJML with `toHtml()`, and compile to responsive HTML with `renderHtml()`:
+Assemble components with the fluent factory, inspect the intermediate MJML with `toHtml()`, and compile to responsive HTML with `renderHtml()`:
 
 ```php
-use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;
+use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 
-$email = MjmlComponentBuilder::document([
-    MjmlComponentBuilder::head([
-        MjmlComponentBuilder::preview('Your weekly digest'),
+$email = MjmlComponentFactory::document([
+    MjmlComponentFactory::head([
+        MjmlComponentFactory::preview('Your weekly digest'),
     ]),
-    MjmlComponentBuilder::make(MjmlComponentEnum::BODY)->setContents([
-        MjmlComponentBuilder::section(
-            [MjmlComponentBuilder::text('Hello!', ['color' => '#333'])],
+    MjmlComponentFactory::make(MjmlComponentEnum::BODY)->setContents([
+        MjmlComponentFactory::section(
+            [MjmlComponentFactory::text('Hello!', ['color' => '#333'])],
             ['background-color' => '#ffffff']
         ),
     ]),
@@ -54,7 +54,7 @@ $mjml = $email->toHtml();      // raw MJML markup
 $html = $email->renderHtml();  // production HTML email
 ```
 
-The builder has shorthands for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`). Any other `MjmlComponentEnum` case (e.g. `BODY`, `COLUMN`, `IMAGE`, `BUTTON`) is built through the generic `MjmlComponentBuilder::make()` path with `setContents()`, `setContent()`, `setAttributes()`, and `setAttribute()`.
+The factory has shorthands for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`). Any other `MjmlComponentEnum` case (e.g. `BODY`, `COLUMN`, `IMAGE`, `BUTTON`) is built through the generic `MjmlComponentFactory::make()` path with `setContents()`, `setContent()`, `setAttributes()`, and `setAttribute()`.
 
 ## Compiler drivers
 
