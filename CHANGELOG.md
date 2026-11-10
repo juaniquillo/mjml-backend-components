@@ -11,12 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `MjmlComponentEnum` is now a string-backed enum (values are the MJML tag suffix: `mjml`, `head`, `body`, `section`, `column`, `group`, `text`, `image`, `button`, `divider`, `spacer`, `hero`, `raw`, `attributes`, `all`, `selector`, `class`, `style`, `font`, `title`, `preview`).
 - `MjmlComponentEnum::MJML_CLASS` (= `'class'`) — renders `<mj-class>`.
-- `MjmlComponentBuilder::all()` shorthand — `MjmlComponentBuilder::all(['font-family' => 'Inter'])` → `<mj-all font-family="Inter">`.
+- `MjmlComponentFactory::all()` shorthand — `MjmlComponentFactory::all(['font-family' => 'Inter'])` → `<mj-all font-family="Inter">`.
 - Single-quote-preserving attribute escaping: `e()` uses `ENT_COMPAT` so `{{ asset('images/hero.jpg') }}` passes through literal without being escaped to `&#039;`.
 - `MjmlComponentEnum` cases now support `->value`, `->name`, `from()`, `tryFrom()`, and `json_encode()`.
 
 ### Changed
 
+- **Breaking:** `Builders\MjmlComponentBuilder` is now `Factories\MjmlComponentFactory`. `make()` and all shorthands (`document`, `head`, `preview`, `all`, `font`, `attributes`, `style`, `section`, `text`) are unchanged — update only the class name and imports.
+- Requires `juaniquillo/laravel-backend-component: ^0.11.0` (follows its `Builders` → `Factories` rename).
 - `MjmlBackendComponent::__construct()` now accepts only `MjmlComponentEnum` (no more string workaround). Uses `$component->value` for the element name.
 - Attribute escaping changed from `ENT_QUOTES` to `ENT_COMPAT` — single quotes (`'`) no longer become `&#039;`.
 - `renderAttributes()` interpolation bug fixed — `htmlspecialchars()` is now properly called via concatenation instead of inside `{$...}`.

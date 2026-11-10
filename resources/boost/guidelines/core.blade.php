@@ -8,19 +8,19 @@ This package composes MJML email layouts in PHP and compiles them to responsive 
 
 ### Building emails
 
-Use `MjmlComponentBuilder` with a `MjmlComponentEnum`. Shorthands exist for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`, `all`); every other enum case goes through the generic `make()` path:
+Use `MjmlComponentFactory` with a `MjmlComponentEnum`. Shorthands exist for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`, `all`); every other enum case goes through the generic `make()` path:
 
 ```php
-use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;
+use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 
-$email = MjmlComponentBuilder::document([
-    MjmlComponentBuilder::head([
-        MjmlComponentBuilder::preview('Your weekly digest'),
+$email = MjmlComponentFactory::document([
+    MjmlComponentFactory::head([
+        MjmlComponentFactory::preview('Your weekly digest'),
     ]),
-    MjmlComponentBuilder::make(MjmlComponentEnum::BODY)->setContents([
-        MjmlComponentBuilder::section(
-            [MjmlComponentBuilder::text('Hello!', ['color' => '#333'])],
+    MjmlComponentFactory::make(MjmlComponentEnum::BODY)->setContents([
+        MjmlComponentFactory::section(
+            [MjmlComponentFactory::text('Hello!', ['color' => '#333'])],
             ['background-color' => '#ffffff']
         ),
     ]),
