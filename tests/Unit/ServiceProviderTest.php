@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Juaniquillo\MjmlBackendComponents\Builders\MjmlComponentBuilder;
 use Juaniquillo\MjmlBackendComponents\Compilers\NodeProcessCompiler;
 use Juaniquillo\MjmlBackendComponents\Compilers\V8JsCompiler;
 use Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
+use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 
 it('binds the node compiler by default', function () {
     expect(config('mjml-backend-components.default'))->toBe('node')
@@ -38,15 +38,15 @@ it('renders html through the bound compiler', function () {
 
     app()->forgetInstance(CompilesMjml::class);
 
-    $html = MjmlComponentBuilder::document([
-        MjmlComponentBuilder::text('Hi'),
+    $html = MjmlComponentFactory::document([
+        MjmlComponentFactory::text('Hi'),
     ])->renderHtml();
 
     expect($html)->toBe('<mjml><mj-text>Hi</mj-text></mjml>');
 });
 
 it('rejects renderHtml on nested components', function (MjmlComponentEnum $component) {
-    expect(fn () => MjmlComponentBuilder::make($component)->setContent('Hi')->renderHtml())
+    expect(fn () => MjmlComponentFactory::make($component)->setContent('Hi')->renderHtml())
         ->toThrow(RuntimeException::class, 'must be called on the root MJML document');
 })->with([
     MjmlComponentEnum::TEXT,
