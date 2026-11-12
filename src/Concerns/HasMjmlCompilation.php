@@ -12,10 +12,9 @@ trait HasMjmlCompilation
     /**
      * Compile the current component tree into fully responsive production HTML.
      */
-    public function renderHtml(): string
+    public function renderHtml(CompilesMjml $compiler): string
     {
         // 1. Convert the underlying component array tree to a string of raw MJML markup
-        // This utilizes your base package's HTML output generation
         $mjmlMarkup = $this->toHtml();
 
         // Explicit structural guard: compilation must start from the document root,
@@ -27,11 +26,7 @@ trait HasMjmlCompilation
             );
         }
 
-        // 2. Resolve the active compiler bound in Laravel's IoC container
-        /** @var CompilesMjml $compiler */
-        $compiler = app(CompilesMjml::class);
-
-        // 3. Hand off the string to be executed by Node under the hood
+        // 2. Hand off the string to the given compiler driver
         return $compiler->compile($mjmlMarkup);
     }
 }

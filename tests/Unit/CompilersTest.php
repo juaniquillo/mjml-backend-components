@@ -46,6 +46,11 @@ it('requires the v8js extension', function () {
         ->toThrow(RuntimeException::class, 'The V8Js PHP extension is not installed');
 });
 
+it('requires the mjml js path config', function () {
+    expect(fn () => new V8JsCompiler([]))
+        ->toThrow(RuntimeException::class, 'missing [mjml_js_path]');
+});
+
 it('requires the mjml js bundle', function () {
     if (! extension_loaded('v8js')) {
         $this->markTestSkipped('v8js extension is not installed.');

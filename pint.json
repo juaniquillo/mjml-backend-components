@@ -1,6 +1,6 @@
 {
     "preset": "laravel",
-    "in": ["src", "config", "tests"],
+    "in": ["src", "tests"],
     "rules": {
         "declare_strict_types": true,
         "no_extra_blank_lines": {

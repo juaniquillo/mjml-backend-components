@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** framework-agnostic release. Dropped `illuminate/*` and `juaniquillo/laravel-backend-component` in favour of `juaniquillo/base-backend-component: ^0.1.0`. Removed `MjmlBackendComponentsServiceProvider`, `config/mjml-backend-components.php`, and the Testbench/workbench scaffolding.
+- **Breaking:** `renderHtml()` now requires an explicitly passed driver: `$email->renderHtml(new NodeProcessCompiler)`.
+- **Breaking:** `MjmlBackendComponent` implements the package-local `Contracts\Htmlable` contract instead of Laravel's; `toHtml()` still returns raw MJML markup.
+
 ### Added
 
 - `MjmlComponentEnum` is now a string-backed enum (values are the MJML tag suffix: `mjml`, `head`, `body`, `section`, `column`, `group`, `text`, `image`, `button`, `divider`, `spacer`, `hero`, `raw`, `attributes`, `all`, `selector`, `class`, `style`, `font`, `title`, `preview`).
