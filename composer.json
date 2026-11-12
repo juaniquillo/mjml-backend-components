@@ -12,12 +12,10 @@
     ],
     "require": {
         "php": "^8.3",
-        "illuminate/support": "^12.0|^13.0",
-        "juaniquillo/laravel-backend-component": "^0.11.0",
+        "juaniquillo/base-backend-component": "^0.1.0",
         "symfony/process": "^7.0|^8.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^10.0|^11.0",
         "pestphp/pest": "^3.0",
         "rector/rector": "^2.0",
         "laravel/pint": "^1.0",
@@ -33,17 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Juaniquillo\\MjmlBackendComponents\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Juaniquillo\\MjmlBackendComponents\\MjmlBackendComponentsServiceProvider"
-            ]
+            "Juaniquillo\\MjmlBackendComponents\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "stable",
@@ -54,18 +42,6 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve --ansi"
-        ],
         "lint": [
             "vendor/bin/pint --parallel"
         ],

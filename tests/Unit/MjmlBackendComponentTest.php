@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-use Juaniquillo\BackendComponents\Components\DefaultAttributeBag;
+use Juaniquillo\BaseBackendComponent\Components\DefaultAttributeBag;
+use Juaniquillo\MjmlBackendComponents\Compilers\NodeProcessCompiler;
 use Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml;
+use Juaniquillo\MjmlBackendComponents\Contracts\Htmlable;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 use Juaniquillo\MjmlBackendComponents\MjmlBackendComponent;
@@ -12,6 +14,10 @@ it('renders the root element as plain mjml', function () {
     $html = MjmlComponentFactory::document()->toHtml();
 
     expect($html)->toBe('<mjml></mjml>');
+});
+
+it('implements the local htmlable contract', function () {
+    expect(MjmlComponentFactory::text('Hi'))->toBeInstanceOf(Htmlable::class);
 });
 
 it('renders body elements with the mj- prefix', function () {
@@ -109,20 +115,49 @@ it('serializes nested trees to arrays', function () {
         ->and($array['contents'][0]['contents'])->toBe(['Hi']);
 });
 
-it('delegates rendering to the bound compiler', function () {
-    // Swap the compiler for a fast inline mock that echoes the markup back.
-    app()->instance(CompilesMjml::class, new class implements CompilesMjml
+it('delegates rendering to the given compiler', function () {
+    $compiler = new class implements CompilesMjml
     {
         public function compile(string $mjmlMarkup): string
         {
             return $mjmlMarkup;
         }
-    });
+    };
 
     $output = MjmlComponentFactory::document([
         MjmlComponentFactory::text('Hello Lindsey!'),
-    ])->renderHtml();
+    ])->renderHtml($compiler);
 
     expect($output)->toContain('<mjml>')
         ->toContain('<mj-text>Hello Lindsey!</mj-text>');
 });
+
+it('renders html through the node compiler', function () {
+    $compiler = new NodeProcessCompiler([
+        'binary' => PHP_BINARY,
+        'arguments' => ['-r', 'echo stream_get_contents(STDIN);'],
+    ]);
+
+    $html = MjmlComponentFactory::document([
+        MjmlComponentFactory::text('Hi'),
+    ])->renderHtml($compiler);
+
+    expect($html)->toBe('<mjml><mj-text>Hi</mj-text></mjml>');
+});
+
+it('rejects renderHtml on nested components', function (MjmlComponentEnum $component) {
+    $compiler = new class implements CompilesMjml
+    {
+        public function compile(string $mjmlMarkup): string
+        {
+            return $mjmlMarkup;
+        }
+    };
+
+    expect(fn () => MjmlComponentFactory::make($component)->setContent('Hi')->renderHtml($compiler))
+        ->toThrow(RuntimeException::class, 'must be called on the root MJML document');
+})->with([
+    MjmlComponentEnum::TEXT,
+    MjmlComponentEnum::SECTION,
+    MjmlComponentEnum::HEAD,
+]);

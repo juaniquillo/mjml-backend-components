@@ -5,7 +5,6 @@ Build responsive HTML emails from PHP. Compose MJML layouts in backend code, com
 ## Requirements
 
 - PHP ^8.3
-- Laravel 12 or 13
 - Node.js plus the MJML CLI (`npm install -g mjml`) for the default `node` driver
 - `ext-v8js` only if you opt into the `v8js` driver (suggested, not required)
 
@@ -17,24 +16,12 @@ Install the package via Composer:
 composer require juaniquillo/mjml-backend-components
 ```
 
-Publish the configuration file using:
-
-```bash
-php artisan vendor:publish --tag=mjml-backend-components-config
-```
-
-> [!TIP]
-> #### Laravel Boost Skill
-> If you use [Laravel Boost](https://github.com/laravel/boost), install the AI skill:
-> ```bash
-> php artisan boost:add-skill https://github.com/juaniquillo/mjml-backend-components
-> ```
-
 ## Usage
 
-Assemble components with the fluent factory, inspect the intermediate MJML with `toHtml()`, and compile to responsive HTML with `renderHtml()`:
+Assemble components with the fluent factory, inspect the intermediate MJML with `toHtml()`, and compile to responsive HTML with `renderHtml()` by passing a compiler driver explicitly:
 
 ```php
+use Juaniquillo\MjmlBackendComponents\Compilers\NodeProcessCompiler;
 use Juaniquillo\MjmlBackendComponents\Factories\MjmlComponentFactory;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
 
@@ -50,21 +37,22 @@ $email = MjmlComponentFactory::document([
     ]),
 ]);
 
-$mjml = $email->toHtml();      // raw MJML markup
-$html = $email->renderHtml();  // production HTML email
+$mjml = $email->toHtml();                          // raw MJML markup
+$html = $email->renderHtml(new NodeProcessCompiler); // production HTML email
 ```
 
 The factory has shorthands for common elements (`document`, `head`, `preview`, `font`, `attributes`, `style`, `section`, `text`). Any other `MjmlComponentEnum` case (e.g. `BODY`, `COLUMN`, `IMAGE`, `BUTTON`) is built through the generic `MjmlComponentFactory::make()` path with `setContents()`, `setContent()`, `setAttributes()`, and `setAttribute()`.
 
 ## Compiler drivers
 
-`config/mjml-backend-components.php` selects the driver via `MJML_COMPILER` (default `node`):
+Pass a `CompilesMjml` driver to `renderHtml()`. The two bundled drivers take plain config arrays:
 
-| Driver | Config key | Environment |
+| Driver | Class | Config keys |
 | --- | --- | --- |
-| `node` | `drivers.node` | `MJML_NODE_BINARY` (default `npx`), runs `mjml -s` as an isolated process |
-| `v8js` | `drivers.v8js` | `MJML_JS_PATH` (path to a bundled `mjml.js`), in-memory compilation via `ext-v8js` |
-| custom | any key | point `class` at your own `CompilesMjml` implementation |
+| `node` | `NodeProcessCompiler` | `binary` (default `npx`), `arguments` (default `['mjml', '-s']`), `timeout` (default `60.0`) |
+| `v8js` | `V8JsCompiler` | `mjml_js_path` (required path to a bundled `mjml.js`), in-memory compilation via `ext-v8js` |
+
+Custom drivers implement `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml::compile(string $mjmlMarkup): string` and are passed to `renderHtml()` the same way.
 
 ## Testing
 

@@ -4,7 +4,7 @@
 @endphp
 ## MJML Backend Components
 
-This package composes MJML email layouts in PHP and compiles them to responsive production HTML. It is an MJML adapter over `juaniquillo/laravel-backend-component` (attribute/content traits, nesting, serialization).
+This package composes MJML email layouts in PHP and compiles them to responsive production HTML. It is an MJML adapter over `juaniquillo/base-backend-component` (attribute/content traits, nesting, serialization). Framework-agnostic: no Laravel integration, no Blade dependency.
 
 ### Building emails
 
@@ -26,18 +26,16 @@ $email = MjmlComponentFactory::document([
     ]),
 ]);
 
-$mjml = $email->toHtml();     // raw MJML markup (implements Htmlable)
-$html = $email->renderHtml(); // compiled production HTML
+$mjml = $email->toHtml();                                  // raw MJML markup (Htmlable contract)
+$html = $email->renderHtml(new NodeProcessCompiler); // compiled production HTML
 ```
 
 Content and attributes use `setContent()` / `setContents()` and `setAttribute()` / `setAttributes()` from the base package.
 
 ### Compiler drivers
 
-`config/mjml-backend-components.php` selects the driver via `MJML_COMPILER` (default `node`):
+Pass a `CompilesMjml` driver to `renderHtml()` (constructed with a plain config array):
 
-- `node` — isolated `npx mjml -s` process (`MJML_NODE_BINARY`).
-- `v8js` — in-memory compilation via `ext-v8js` (`MJML_JS_PATH`); the extension is optional and never required.
-- custom — point any driver key's `class` at your own `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml` implementation.
-
-Publish the config with `php artisan vendor:publish --tag=mjml-backend-components-config`.
+- `node`: isolated `npx mjml -s` process (`binary`, `arguments`, `timeout` keys).
+- `v8js`: in-memory compilation via `ext-v8js` (`mjml_js_path` key, required); the extension is optional and never required.
+- custom: implement `Juaniquillo\MjmlBackendComponents\Contracts\CompilesMjml` and pass it to `renderHtml()` the same way.

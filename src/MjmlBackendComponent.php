@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Juaniquillo\MjmlBackendComponents;
 
-use Illuminate\Contracts\Support\Htmlable;
-use Juaniquillo\BackendComponents\Components\DefaultAttributeBag;
-use Juaniquillo\BackendComponents\Concerns\HasContent;
-use Juaniquillo\BackendComponents\Concerns\IsBackendComponent;
-use Juaniquillo\BackendComponents\Contracts\AttributeBag;
-use Juaniquillo\BackendComponents\Contracts\BackendComponent;
-use Juaniquillo\BackendComponents\Contracts\ContentComponent;
+use Juaniquillo\BaseBackendComponent\Components\DefaultAttributeBag;
+use Juaniquillo\BaseBackendComponent\Concerns\HasContent;
+use Juaniquillo\BaseBackendComponent\Concerns\IsBackendComponent;
+use Juaniquillo\BaseBackendComponent\Contracts\AttributeBag;
+use Juaniquillo\BaseBackendComponent\Contracts\BackendComponent;
+use Juaniquillo\BaseBackendComponent\Contracts\ContentComponent;
+use Juaniquillo\BaseBackendComponent\Themes\GenericThemeManager;
 use Juaniquillo\MjmlBackendComponents\Concerns\HasMjmlCompilation;
+use Juaniquillo\MjmlBackendComponents\Contracts\Htmlable;
 use Juaniquillo\MjmlBackendComponents\Enums\MjmlComponentEnum;
+use RuntimeException;
 
 class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlable
 {
@@ -42,12 +44,22 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
             'component' => self::class,
             'attributes' => $this->getAttributes(),
             'contents' => $this->processContent()->toArray(),
+            // MJML components carry no themes, paths, or settings. The empty
+            // slots below satisfy the base BackendComponent contract shape.
+            'theme' => [
+                'manager' => GenericThemeManager::class,
+                'themes' => [],
+                'path' => '',
+                'realPath' => '',
+            ],
+            'path' => null,
+            'settings' => [],
         ];
     }
 
     /**
      * Render the component tree down to its intermediate string of raw MJML markup.
-     * This fulfills Laravel's Htmlable contract.
+     * This fulfills this package's Htmlable contract.
      */
     public function toHtml(): string
     {
@@ -100,8 +112,15 @@ class MjmlBackendComponent implements BackendComponent, ContentComponent, Htmlab
 
         $rendered = '';
         foreach ($contents as $item) {
-            // If it's a nested component or Htmlable item, render it; otherwise, cast it to a string
-            $rendered .= ($item instanceof Htmlable) ? $item->toHtml() : (string) $item;
+            if ($item instanceof Htmlable) {
+                $rendered .= $item->toHtml();
+            } elseif (is_string($item) || is_int($item)) {
+                $rendered .= (string) $item;
+            } else {
+                throw new RuntimeException(
+                    'MJML rendering failed: contents must be strings, integers, or Htmlable instances.',
+                );
+            }
         }
 
         return $rendered;

@@ -16,8 +16,15 @@ class V8JsCompiler implements CompilesMjml
     /** @param  array<string, mixed>  $config */
     public function __construct(array $config = [])
     {
-        // Path to a pre-bundled, browser/vanilla-compatible mjml.js library file
-        $this->mjmlSourcePath = $config['mjml_js_path'] ?? base_path('vendor/mjml/mjml.js');
+        // Path to a pre-bundled, browser/vanilla-compatible mjml.js library file.
+        // No default is assumed since resolution depends on the consumer's project layout.
+        if (! isset($config['mjml_js_path']) || ! is_string($config['mjml_js_path'])) {
+            throw new RuntimeException(
+                'V8Js compilation failed: missing [mjml_js_path] config pointing to a bundled mjml.js file.',
+            );
+        }
+
+        $this->mjmlSourcePath = $config['mjml_js_path'];
     }
 
     public function compile(string $mjmlMarkup): string
